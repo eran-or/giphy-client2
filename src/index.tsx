@@ -19,7 +19,7 @@ root.render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<SearchGiphy />} />
-            <Route path=":id" element={<GihpyDetails />} />
+            <Route path=":slag/:id" element={<GihpyDetails />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -39,7 +39,7 @@ export const searchGiphyReducer = createSlice({
       })
       .addCase(getGiphy.fulfilled, (state, action) => {
         state.status = "idle";
-        
+
         if (!action.meta.arg) {
           state.data = [];
         } else if (state.currentSearch !== action.meta.arg) {
@@ -47,9 +47,8 @@ export const searchGiphyReducer = createSlice({
         } else {
           state.data = [...state.data, ...(action.payload as [])];
         }
-        
-        state.currentSearch = action.meta.arg
 
+        state.currentSearch = action.meta.arg;
       })
       .addCase(getGiphy.rejected, (state) => {
         state.status = "failed";
@@ -66,7 +65,7 @@ export const getGiphy = createAsyncThunk<any, string>(
     }
     const { limit, offset } = (getState() as RootState)
       .searchGiphy as SearchState;
-      dispatch(setOffset());
+    dispatch(setOffset());
     const response = await fetchGiphy({ q, limit, offset });
     return (response as any).data as Image[];
   }

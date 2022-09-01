@@ -4,12 +4,15 @@ import { useLocation } from "react-router-dom";
 
 export default function SearchGiphy() {
   const location = useLocation()
-  const image = location.state as Image
+  const state = location.state as {image:Image, currentSearch:string}
+  const image = state.image
+  const original = image.images.original
+  
   return (
-    <div>
+    <div className="flex flex-col	items-center">
       <h3>{image.title}</h3>  
-      <img src={image.images.original.url} alt={image.title} />
-      <div>{image.images.original.width} x {image.images.original.height}</div>
+      <img width={original.width} height={original.height} src={original.url} alt={image.title} />
+      <div>{original.width} x {original.height}</div>
     </div>
   );
 }

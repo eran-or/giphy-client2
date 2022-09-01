@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { debounce } from "debounce";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { Image } from "./fetchGiphy";
 import sha1 from "crypto-js/sha1";
 import Loader from "../loader/Loader";
+import InfiniteScroll from "../infinite-scroll/InfiniteScroll";
 
 import {
   getGiphy,
@@ -18,43 +19,51 @@ export default function SearchGiphy() {
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef(null);
-  const currentSearch = useAppSelector(selectCurrentSearch) 
-  const initRef = useRef(true)
-
+  const currentSearch = useAppSelector(selectCurrentSearch);
+  const initRef = useRef(true);
 
   useEffect(() => {
-    if(initRef.current){
-      initRef.current = false
-      if(currentSearch && inputRef.current){
-        (inputRef.current as HTMLInputElement).value = currentSearch
+    if (initRef.current) {
+      initRef.current = false;
+      if (currentSearch && inputRef.current) {
+        (inputRef.current as HTMLInputElement).value = currentSearch;
       }
     }
-    containerRef.current?.addEventListener(
-      "scroll",
-      function (e) {
-        const { scrollTop, scrollHeight, clientHeight } =
-          e.target as HTMLElement;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-          const value = inputRef.current?(inputRef.current as HTMLInputElement).value:''
-            dispatch(getGiphy(value));
-        }
-      },
-      false
-    );
-    let pulled = false
-    containerRef.current?.addEventListener("wheel", function (event) {
-      const value = inputRef.current?(inputRef.current as HTMLInputElement).value:''
-      if (event.deltaY > 0) {
-        //scrolling down
-        const { scrollTop, scrollHeight, clientHeight } = event.target as HTMLElement;
-        
-        if(value && !pulled && scrollTop === 0 && scrollHeight === clientHeight){
-          pulled = true
-          dispatch(getGiphy(value));
-        }
-      }
-    }); 
-  }, [dispatch, currentSearch]);
+  }, [currentSearch]);
+
+  // useEffect(() => {
+  //   if(initRef.current){
+  //     initRef.current = false
+  //     if(currentSearch && inputRef.current){
+  //       (inputRef.current as HTMLInputElement).value = currentSearch
+  //     }
+  //   }
+  //   containerRef.current?.addEventListener(
+  //     "scroll",
+  //     function (e) {
+  //       const { scrollTop, scrollHeight, clientHeight } =
+  //         e.target as HTMLElement;
+  //       if (scrollTop + clientHeight >= scrollHeight - 5) {
+  //         const value = inputRef.current?(inputRef.current as HTMLInputElement).value:''
+  //           dispatch(getGiphy(value));
+  //       }
+  //     },
+  //     false
+  //   );
+  //   let pulled = false
+  //   containerRef.current?.addEventListener("wheel", function (event) {
+  //     const value = inputRef.current?(inputRef.current as HTMLInputElement).value:''
+  //     if (event.deltaY > 0) {
+  //       //scrolling down
+  //       const { scrollTop, scrollHeight, clientHeight } = event.target as HTMLElement;
+
+  //       if(value && !pulled && scrollTop === 0 && scrollHeight === clientHeight){
+  //         pulled = true
+  //         dispatch(getGiphy(value));
+  //       }
+  //     }
+  //   });
+  // }, [dispatch, currentSearch]);
 
   const handleSearch = debounce(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,8 +78,22 @@ export default function SearchGiphy() {
     image: Image
   ) => {
     e.preventDefault();
-    navigate(image.id, { state: image });
+    const path = encodeURIComponent(getValue()).replace(/%20/g, '-')
+    navigate(`${path}/${image.id}`, { state: {
+      image,
+      currentSearch: getValue()
+    } });
   };
+  
+  const getValue = useCallback(()=>{
+    const  value = inputRef.current? (inputRef.current as HTMLInputElement).value: "";
+    return value
+  },[])
+  const handleFetchData = useCallback(() => {
+    const value = getValue()
+    dispatch(getGiphy(value))
+  },[dispatch, getValue])
+
 
   return (
     <div className="flex">
@@ -88,28 +111,36 @@ export default function SearchGiphy() {
         ref={containerRef}
         className="max-w-screen-sm h-[80vh] flex flex-wrap justify-center overflow-scroll max-h-screen"
       >
-        {data.map((image: Image, i) => {
-          const str = image.images.preview_webp.url + image.id + i;
-          const key = sha1(str).toString();
-          return (
-            <div key={key} className="m-3">
-              <Link
-                to={image.id}
-                onClick={(e) => {
-                  handleImageDetails(e, image);
-                }}
-              >
-                <img
-                  width={image.images.preview_webp.width}
-                  height={image.images.preview_webp.height}
-                  src={image.images.preview_webp.url}
-                  alt={image.title}
-                />
-              </Link>
-            </div>
-          );
-        })}
-        {data.length === 0 && <Loader />}
+        <InfiniteScroll
+          loader={<Loader />}
+          container={containerRef.current}
+          fetchData={handleFetchData}
+          dataLength={data.length}
+          value={getValue()}
+        >
+          {data.map((image: Image, i) => {
+            console.log(`${getValue()}/${image.id}`);
+            const str = image.images.preview_webp.url + image.id + i;
+            const key = sha1(str).toString();
+            return (
+              <div key={key} className="m-3">
+                <Link
+                  to={image.id}
+                  onClick={(e) => {
+                    handleImageDetails(e, image);
+                  }}
+                >
+                  <img
+                    width={image.images.preview_webp.width}
+                    height={image.images.preview_webp.height}
+                    src={image.images.preview_webp.url}
+                    alt={image.title}
+                  />
+                </Link>
+              </div>
+            );
+          })}
+        </InfiniteScroll>
       </div>
     </div>
   );
