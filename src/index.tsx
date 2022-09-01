@@ -15,7 +15,7 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename="https://eran-or.github.io/giphy-client/">
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<SearchGiphy />} />
