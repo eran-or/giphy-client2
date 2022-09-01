@@ -28,9 +28,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy":""
+    "deploy": "gh-pages -d build"
   },
-  "homepage":"",
+  "homepage":"https://eran-or.github.io/giphy-client/",
   "eslintConfig": {
     "extends": [
       "react-app",
