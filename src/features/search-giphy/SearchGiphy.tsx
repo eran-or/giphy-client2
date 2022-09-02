@@ -96,8 +96,8 @@ export default function SearchGiphy() {
 
 
   return (
-    <div className="flex">
-      <div className="w-2/5 mx-1.5 min-w-[350px]">
+    <div className="flex flex-wrap">
+      <div className="w-2/5 m-4 mt-1 min-w-[350px]">
         <input
           ref={inputRef}
           onChange={handleSearch}
@@ -109,7 +109,7 @@ export default function SearchGiphy() {
       </div>
       <div
         ref={containerRef}
-        className="max-w-screen-sm h-[80vh] flex flex-wrap justify-center overflow-scroll max-h-screen"
+        className="max-w-screen-sm h-[80vh] flex flex-wrap justify-between overflow-scroll max-h-screen"
       >
         <InfiniteScroll
           loader={<Loader />}

@@ -8,7 +8,7 @@ function App() {
         <NavLink style={({ isActive }) => {
           return {
             display: "block",
-            margin: "1rem 0",
+            margin: "1.1rem",
             color: isActive ? "gray" : "",
             textDecoration: isActive? "none" : "underline"
           };
