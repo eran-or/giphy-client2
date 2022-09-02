@@ -4,9 +4,8 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { Image } from "./fetchGiphy";
 import sha1 from "crypto-js/sha1";
-import Loader from "../loader/Loader";
+import Loader,{ PlaceHolderLoader } from "../loader/Loader";
 import InfiniteScroll from "../infinite-scroll/InfiniteScroll";
-
 import {
   getGiphy,
   selectSearchResult,
@@ -112,6 +111,7 @@ export default function SearchGiphy() {
         className="max-w-screen-sm h-[80vh] flex flex-wrap justify-between overflow-scroll max-h-screen"
       >
         <InfiniteScroll
+          placeholder={<PlaceHolderLoader />}
           loader={<Loader />}
           container={containerRef.current}
           fetchData={handleFetchData}

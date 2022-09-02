@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function InfinitScroll({
   children,
@@ -7,6 +7,7 @@ export default function InfinitScroll({
   value,
   container,
   fetchData,
+  placeholder
 }: {
   children: React.ReactNode;
   loader: React.ReactElement;
@@ -14,16 +15,22 @@ export default function InfinitScroll({
   value: string;
   container: HTMLDivElement | null;
   fetchData: () => void;
+  placeholder:React.ReactElement;
 }) {
+  const [isPending, setIsPending] = useState(true)
   useEffect(() => {
+    
 
+    
     container?.addEventListener(
       "scroll",
       function (e) {
         const { scrollTop, scrollHeight, clientHeight } =
           e.target as HTMLElement;
         if (scrollTop + clientHeight >= scrollHeight - 5) {
+          setIsPending(true)
           fetchData();
+          setIsPending(false)
         }
       },
       false
@@ -49,13 +56,16 @@ export default function InfinitScroll({
     container?.scrollTo({
         top:0
     })
+  
   }, [container, fetchData, value]);
+
 
 
   return (
     <>
       {children}
-      {dataLength === 0 && loader}
+      {dataLength === 0 && placeholder}
+      {isPending && dataLength > 0 && loader}
     </>
   );
 }

@@ -1,8 +1,12 @@
 import "react-loading-skeleton/dist/skeleton.css";
 import React from "react";
-import Skeleton from "react-loading-skeleton";
+import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-export default function Loader() {
+export default function LineLoader () {
+  return <div className="w-screen mx-4 my-2"><Skeleton style={{display:'block', width:'-webkit-fill-available', height:20}} /></div>
+}
+
+export const PlaceHolderLoader = () => {
   return (
     <div className="flex flex-wrap justify-center overflow-scroll max-h-screen">
       {Array(9)
@@ -13,3 +17,4 @@ export default function Loader() {
     </div>
   );
 }
+
