@@ -1,6 +1,5 @@
 import "react-loading-skeleton/dist/skeleton.css";
-import React from "react";
-import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 
 export default function LineLoader () {
   return <div className="w-screen mx-4 my-2"><Skeleton style={{display:'block', width:'-webkit-fill-available', height:20}} /></div>

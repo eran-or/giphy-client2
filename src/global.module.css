@@ -1,0 +1,12 @@
+.activeClassName{
+  display: block;
+  margin: 1.1rem;
+  color: gray;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.navLink{
+  display: block;
+  margin: 1.1rem;
+  text-decoration: none;
+}

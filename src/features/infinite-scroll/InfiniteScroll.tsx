@@ -19,9 +19,6 @@ export default function InfinitScroll({
 }) {
   const [isPending, setIsPending] = useState(true)
   useEffect(() => {
-    
-
-    
     container?.addEventListener(
       "scroll",
       function (e) {
@@ -58,8 +55,6 @@ export default function InfinitScroll({
     })
   
   }, [container, fetchData, value]);
-
-
 
   return (
     <>
