@@ -50,15 +50,7 @@ export default function SearchGiphy() {
   }
   dispatch(getGiphy(value));
   }, [location, dispatch]);
-  useEffect(()=>{
-    // const filter = location.search.split('?filter=')[1]
-    // data.filter(image=>{
-    //   //Todo:filter 
-    // })
-    // console.log(filter);
-    
-  },[data, location.search])
-
+  
   const handleSearch = () => { 
     if (inputRef.current) {
       const value = (inputRef.current as HTMLInputElement).value;

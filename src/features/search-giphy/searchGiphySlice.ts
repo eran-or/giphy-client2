@@ -39,6 +39,9 @@ const searchGiphyReducer = createSlice({
     },
     deleteHistoryEntry: (state, action) => {
       state.searchHistory = state.searchHistory.filter(entry=>entry.id!==action.payload)
+    },
+    setFilter:  (state, action)=>{
+      
     }
   },
   extraReducers: (builder) => {
